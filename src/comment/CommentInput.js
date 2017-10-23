@@ -26,6 +26,9 @@ class CommentInput extends Component{
 			content: ''
 		})
 	}
+	componentDidMount = ()=>{
+		this.input.focus();
+	}
 	render(){
 		return (
 			<div className='comment-input'>
@@ -34,7 +37,8 @@ class CommentInput extends Component{
 		          <div className='comment-field-input'>
 		            <input 
 		            	value={this.state.username}
-		            	onChange={this.handleUsernameChange.bind(this)}/>
+		            	onChange={this.handleUsernameChange.bind(this)}
+		            	ref={(input)=>this.input=input}/>
 		          </div>
 		        </div>
 		        <div className='comment-field'>
