@@ -1,10 +1,26 @@
 import React, {Component} from 'react';
 class CommentInput extends Component{
+
 	constructor(){
 		super();
 		this.state = {
 			username: '',
 			content: ''
+		}
+	}
+	componentWillMount = ()=>{
+		this._loadUsername()
+	}
+	componentDidMount = ()=>{
+		this.textarea.focus();
+	}
+	_saveUsername = (username)=>{
+		localStorage.setItem('username', username);
+	}
+	_loadUsername = ()=>{
+		const username = localStorage.getItem('username');
+		if(username){
+			this.setState({username})
 		}
 	}
 	handleUsernameChange = (event)=>{
@@ -17,17 +33,17 @@ class CommentInput extends Component{
 			content: event.target.value
 		})
 	}
+	handleUsernameBlur = (event)=>{
+		this._saveUsername(event.target.value);
+	}
 	handleSubmit = ()=>{
 		if(this.props.onSubmit){
 			const {username, content} = this.state;
-			this.props.onSubmit({username, content});
+			this.props.onSubmit({username, content, createdTime: +new Date()});
 		}
 		this.setState({
 			content: ''
 		})
-	}
-	componentDidMount = ()=>{
-		this.input.focus();
 	}
 	render(){
 		return (
@@ -38,7 +54,7 @@ class CommentInput extends Component{
 		            <input 
 		            	value={this.state.username}
 		            	onChange={this.handleUsernameChange.bind(this)}
-		            	ref={(input)=>this.input=input}/>
+		            	onBlur={this.handleUsernameBlur.bind(this)}/>
 		          </div>
 		        </div>
 		        <div className='comment-field'>
@@ -46,7 +62,8 @@ class CommentInput extends Component{
 		          <div className='comment-field-input'>
 		            <textarea 
 		            	value={this.state.content}
-		            	onChange={this.handleContentChange.bind(this)}/>
+		            	onChange={this.handleContentChange.bind(this)}
+		            	ref={(textarea)=>this.textarea = textarea}/>
 		          </div>
 		        </div>
 		        <div className='comment-field-button'>
